@@ -29,6 +29,4 @@ python train.py
 
 ## Decisões e Dificuldades
 
-## Decisões e Dificuldades
-
 Durante o desenvolvimento, o VSCode reiniciou inesperadamente e desligou o autosave sem eu perceber. Fiz vários commits com arquivos vazios antes de notar que nada tinha sido salvo em disco. Aprendi a sempre verificar com `git diff` antes de commitar e a manter o autosave ativo.
