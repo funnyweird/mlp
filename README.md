@@ -21,12 +21,13 @@ Escolhi 2 camadas ocultas com 256 e 128 neurônios porque é uma arquitetura equ
 
 ## Resultados
 
-| Configuração | Acurácia (teste) | Épocas |
-|---|---|---|
-| SGD, lr=0.01 | 96.66% | 20 |
-| Adam, lr=0.001 | 98.10% | 20 |
+| Configuração | Arquitetura | Acurácia (teste) | Épocas |
+|---|---|---|---|
+| SGD, lr=0.01 | 784→256→128→10 | 96.66% | 20 |
+| Adam, lr=0.001 | 784→256→128→10 | 98.10% | 20 |
+| Adam deep, lr=0.001 | 784→512→256→128→10 | — | 20 |
 
-Adam convergiu muito mais rápido — já na época 1 tinha 96.89% de acurácia no treino, enquanto SGD começou em 89.51%.
+Adam convergiu muito mais rápido — já na época 1 tinha 96.89% de acurácia no treino, enquanto SGD começou em 89.51%. O experimento com arquitetura mais profunda testa se mais camadas melhoram o resultado.
 
 ![Curva de Loss e Acurácia](results/loss_accuracy.png)
 ![Matriz de Confusão](results/confusion_matrix.png)
