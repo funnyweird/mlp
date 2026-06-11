@@ -252,30 +252,16 @@ Escolhida como ponto de partida equilibrado: grande o suficiente para aprender p
 
 ### Inicialização dos pesos
 
-A primeira tentativa usou zeros para todos os pesos. A rede não aprendia nada: todos os neurônios da mesma camada recebiam o mesmo gradiente e evoluíam de forma idêntica — o problema da simetria. Com pesos aleatórios sem escala adequada, os gradientes explodiam. A inicialização He resolve isso matematicamente, projetada especificamente para ReLU.
+Comecei com todos os pesos zerados porque parecia uma escolha neutra. A rede não aprendia nada e ficava travada independente de quantas épocas eu rodasse.Tive que pesquisar para descobrir que o problema é que todos os neurônios recebem o mesmo gradiente e evoluem igual, então a rede inteira age como se fosse um neurônio só. Troquei pra inicialização He (que é a recomendada pra ReLU) e a rede passou a aprender normalmente na primeira época.
 
-**Aprendizado:** inicialização não é detalhe — é pré-requisito para o aprendizado funcionar.
+### VSCode reiniciou o autosave sem eu perceber
 
-### VSCode reiniciou e desligou o autosave
-
-Durante o desenvolvimento, o VSCode atualizou e reiniciou automaticamente, desligando o autosave sem aviso. Os arquivos `.py` ficaram em disco com conteúdo vazio — o que estava na memória do editor nunca foi salvo. Vários commits foram feitos com arquivos vazios antes de o problema ser identificado.
-
-**Diagnóstico:** `Get-Content arquivo.py | Select-Object -First 5` no PowerShell mostrou os arquivos vazios.  
-**Solução:** reabrir cada arquivo no editor, forçar Ctrl+S, verificar com `git diff` e recommitar com a mensagem `fix: salva conteúdo real dos arquivos (autosave estava desligado)`.  
-**Aprendizado:** sempre verificar `git diff` antes de commitar. Nunca assumir que o que está na tela já foi salvo em disco.
+O VSCode atualizou e reiniciou no meio do desenvolvimento e desligou o autosave. Fiz vários commits achando que estava salvando o progresso, mas os arquivos em disco estavam vazios. Só percebi porque rodei os testes e eles não encontravam nenhuma função. Tive que reescrever o conteúdo dos arquivos, salvar com Ctrl+S e recommitar tudo.
 
 
-### Gradient check retornando zeros com dados reais
+### Gradient check retornando tudo zero
 
-O gradient check inicial usava os primeiros 16 exemplos do MNIST. O resultado foi `analítico=0.00000000 | numérico=0.00000000` — tecnicamente "correto" (diferença relativa = 0) mas inútil para validação. O problema: muitos pixels do MNIST são zero (fundo preto), o que faz ReLU zerar os gradientes ao longo de toda a rede para aquelas entradas.
-
-**Solução:** usar `np.random.randn(16, 784)` — valores gaussianos garantem que a maioria dos neurônios fique ativa e o gradiente seja não-trivial.
-
-### SyntaxError: f-string com quebra de linha literal
-
-Em uma edição do notebook, um `\n` que deveria ser caractere de escape ficou como quebra de linha literal dentro de um f-string, causando `SyntaxError: unterminated f-string literal`. O erro aparecia no Colab mas não era visível no editor porque a célula exibia a string com a quebra visual como se fosse correta.
-
-**Solução:** corrigir via Python no arquivo `.ipynb` (substituição no JSON) antes do upload para o Colab.
+Implementei o gradient check e o resultado foi 0.00000000 pra gradiente analítico e numérico, o que é "correto" mas claramente não estava testando nada. O problema era que usei os primeiros exemplos do MNIST, que têm muitos pixels pretos (zero), e ReLU zera o gradiente onde a entrada é zero. Troquei por entradas aleatórias com np.random.randn e aí os gradientes apareceram e o check ficou real.
 
 ---
 
